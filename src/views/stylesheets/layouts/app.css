@@ -1,0 +1,5 @@
+.view-app { min-height:100vh; display:flex; flex-direction:column; }
+.view-content { flex:1; }
+.view-footer { padding-block:2.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; border-top:1px solid var(--line); color:var(--muted); font-size:.8rem; }
+.view-footer a { color:var(--ink); text-decoration:none; }
+@media (max-width:38rem) { .view-footer { align-items:flex-start; flex-direction:column; } }

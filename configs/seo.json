@@ -1,0 +1,17 @@
+{
+  "site_name": "PHPAML",
+  "title": "PHPAML application",
+  "description": "A fast, structured application built with the PHPAML MVC mini-framework.",
+  "base_url": "http://127.0.0.1:8910",
+  "locale": "en_CA",
+  "robots": "index,follow",
+  "image": "",
+  "twitter_card": "summary_large_image",
+  "type": "WebSite",
+  "author": "",
+  "theme_color": "#6d28d9",
+  "allow": [
+    "/"
+  ],
+  "disallow": []
+}

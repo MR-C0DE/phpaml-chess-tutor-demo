@@ -1,0 +1,4 @@
+.env
+/vendor/
+/runtime/
+.DS_Store

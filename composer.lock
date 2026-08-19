@@ -1,0 +1,494 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "9d6bfb55e133bae025ad8377a51c414f",
+    "packages": [
+        {
+            "name": "mongodb/mongodb",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mongodb/mongo-php-library",
+                "reference": "12e56461166d915e3dd8e4969ad0940ed5207d88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/12e56461166d915e3dd8e4969ad0940ed5207d88",
+                "reference": "12e56461166d915e3dd8e4969ad0940ed5207d88",
+                "shasum": ""
+            },
+            "require": {
+                "composer-runtime-api": "^2.0",
+                "ext-mongodb": "^2.3",
+                "php": "^8.1",
+                "psr/log": "^1.1.4|^2|^3",
+                "symfony/polyfill-php85": "^1.33"
+            },
+            "replace": {
+                "mongodb/builder": "*"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^12.0",
+                "phpunit/phpunit": "^10.5.35",
+                "rector/rector": "^2.3.4",
+                "squizlabs/php_codesniffer": "^3.7",
+                "vimeo/psalm": "~6.14.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "MongoDB\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Braun",
+                    "email": "andreas.braun@mongodb.com"
+                },
+                {
+                    "name": "Jeremy Mikola",
+                    "email": "jmikola@gmail.com"
+                },
+                {
+                    "name": "Jérôme Tamarelle",
+                    "email": "jerome.tamarelle@mongodb.com"
+                }
+            ],
+            "description": "MongoDB driver library",
+            "homepage": "https://jira.mongodb.org/browse/PHPLIB",
+            "keywords": [
+                "database",
+                "driver",
+                "mongodb",
+                "persistence"
+            ],
+            "time": "2026-04-28T12:50:06+00:00"
+        },
+        {
+            "name": "phpaml/data",
+            "version": "v0.1.0-alpha.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MR-C0DE/phpaml-data.git",
+                "reference": "62fa479bed402e0cb8f93f755ab34313d34a4a5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MR-C0DE/phpaml-data/zipball/62fa479bed402e0cb8f93f755ab34313d34a4a5a",
+                "reference": "62fa479bed402e0cb8f93f755ab34313d34a4a5a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "phpaml": {
+                    "type": "data-library",
+                    "version": "0.1.0-alpha.4"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AML\\Data\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Typed data access for PHPAML, AML View and standalone PHP applications.",
+            "homepage": "https://phpaml.com",
+            "keywords": [
+                "database",
+                "mysql",
+                "orm",
+                "phpaml",
+                "postgresql",
+                "sqlite"
+            ],
+            "support": {
+                "issues": "https://github.com/MR-C0DE/phpaml-data/issues",
+                "source": "https://github.com/MR-C0DE/phpaml-data"
+            },
+            "time": "2026-08-19T10:33:17+00:00"
+        },
+        {
+            "name": "phpaml/data-mongodb",
+            "version": "v0.1.0-alpha.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MR-C0DE/phpaml-data-mongodb.git",
+                "reference": "8e08f4055988e7fd368709e2cf2e2c55bc022cd2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MR-C0DE/phpaml-data-mongodb/zipball/8e08f4055988e7fd368709e2cf2e2c55bc022cd2",
+                "reference": "8e08f4055988e7fd368709e2cf2e2c55bc022cd2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mongodb": "*",
+                "mongodb/mongodb": "^2.0",
+                "php": "^8.2",
+                "phpaml/data": "^0.1@alpha"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "phpaml": {
+                    "type": "data-adapter",
+                    "driver": "mongodb",
+                    "version": "0.1.0-alpha.3"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AML\\Data\\MongoDB\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "MongoDB adapter for phpaml/data.",
+            "homepage": "https://phpaml.com",
+            "keywords": [
+                "database",
+                "mongodb",
+                "nosql",
+                "odm",
+                "phpaml"
+            ],
+            "support": {
+                "issues": "https://github.com/MR-C0DE/phpaml-data-mongodb/issues",
+                "source": "https://github.com/MR-C0DE/phpaml-data-mongodb"
+            },
+            "time": "2026-08-18T01:17:13+00:00"
+        },
+        {
+            "name": "phpaml/engine",
+            "version": "v0.1.0-beta.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MR-C0DE/phpaml-engine.git",
+                "reference": "6df1223ffb618a7eff30bf80d004f3808e879c67"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MR-C0DE/phpaml-engine/zipball/6df1223ffb618a7eff30bf80d004f3808e879c67",
+                "reference": "6df1223ffb618a7eff30bf80d004f3808e879c67",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "type": "library",
+            "extra": {
+                "phpaml": {
+                    "type": "frontend-engine",
+                    "version": "0.1.0-beta.2"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "AML\\Engine\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Client-side state, actions and rendering engine for AML View.",
+            "support": {
+                "issues": "https://github.com/MR-C0DE/phpaml-engine/issues",
+                "source": "https://github.com/MR-C0DE/phpaml-engine/tree/v0.1.0-beta.2"
+            },
+            "time": "2026-08-18T01:23:07+00:00"
+        },
+        {
+            "name": "phpaml/view",
+            "version": "v0.1.0-beta.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MR-C0DE/phpaml-view.git",
+                "reference": "3875741acc02b5e05d1e6adb84f5d2b7b9e53a53"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MR-C0DE/phpaml-view/zipball/3875741acc02b5e05d1e6adb84f5d2b7b9e53a53",
+                "reference": "3875741acc02b5e05d1e6adb84f5d2b7b9e53a53",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.2",
+                "phpaml/engine": "^0.1@beta"
+            },
+            "type": "library",
+            "extra": {
+                "phpaml": {
+                    "type": "view-library",
+                    "version": "0.1.0-beta.3"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "AML\\View\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Declarative frontend interfaces for PHPAML, authored in PHP.",
+            "homepage": "https://phpaml.com",
+            "keywords": [
+                "declarative-ui",
+                "frontend",
+                "mvc",
+                "phpaml"
+            ],
+            "support": {
+                "issues": "https://github.com/MR-C0DE/phpaml-view/issues",
+                "source": "https://github.com/MR-C0DE/phpaml-view"
+            },
+            "time": "2026-08-17T20:19:37+00:00"
+        },
+        {
+            "name": "psr/log",
+            "version": "3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
+                "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/3.0.2"
+            },
+            "time": "2024-09-11T13:17:53+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php85",
+            "version": "v1.41.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php85.git",
+                "reference": "255fab485aaa1006ed411040c42aecd7b5302d7a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php85/zipball/255fab485aaa1006ed411040c42aecd7b5302d7a",
+                "reference": "255fab485aaa1006ed411040c42aecd7b5302d7a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php85\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.5+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php85/tree/v1.41.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-07-01T12:47:55+00:00"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "phpstan/phpstan",
+            "version": "2.2.8",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e285254e60f33c21902efef4a926ca0987c06804",
+                "reference": "e285254e60f33c21902efef4a926ca0987c06804",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ondřej Mirtes"
+                },
+                {
+                    "name": "Markus Staab"
+                },
+                {
+                    "name": "Vincent Langlet"
+                }
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "keywords": [
+                "dev",
+                "static analysis"
+            ],
+            "support": {
+                "docs": "https://phpstan.org/user-guide/getting-started",
+                "forum": "https://github.com/phpstan/phpstan/discussions",
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "security": "https://github.com/phpstan/phpstan/security/policy",
+                "source": "https://github.com/phpstan/phpstan-src"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-04T22:21:45+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "phpaml/data": 15,
+        "phpaml/data-mongodb": 15,
+        "phpaml/engine": 10,
+        "phpaml/view": 10
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=8.2",
+        "ext-pdo": "*"
+    },
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
+}

@@ -1,0 +1,109 @@
+PHPAML
+======
+
+PHPAML est un micro-framework MVC en PHP 8.2+, inspiré d’ASP.NET et de Java EE.
+Il comprend le routage, l’injection de dépendances, les middlewares, les vues,
+la validation, les sessions, la sécurité CSRF, PDO et les migrations.
+
+Créer une application
+---------------------
+
+Initialiser le dossier courant :
+
+    aml create .
+
+Créer un nouveau dossier :
+
+    aml create mon-projet
+    cd mon-projet
+
+Le générateur n’écrase jamais un fichier existant.
+
+Développement
+-------------
+
+Préparer les dépendances dans l’environnement propre à PHPAML, `runtime/` :
+
+    aml install
+
+Pour une installation de production sans outils de développement :
+
+    aml install --production
+
+Les versions exactes sont enregistrées dans `composer.lock`. Le manifeste de
+l’installation se trouve dans `runtime/aml-installed.json`.
+
+    aml serve
+    aml routes
+    aml test
+
+`aml serve` actualise automatiquement le navigateur après une modification PHP,
+CSS, JavaScript, HTML, JSON ou SVG.
+
+Générateurs
+-----------
+
+    aml make:controller User
+    aml make:model User
+    aml make:middleware Auth
+    aml make:migration create_users_table
+
+Base de données
+---------------
+
+Copier `.env.example` vers `.env`, configurer `DATABASE_DSN`, puis exécuter :
+
+    aml migrate
+
+Autres commandes
+----------------
+
+    aml cache:clear
+    aml run start
+    aml version
+    aml help
+
+Architecture
+------------
+
+- `app/Controllers` et `app/Models` : application ;
+- `app/views` : vues et vues partielles ;
+- `public/` : seul dossier exposé au web, avec `index.php`, CSS, JavaScript et images ;
+- `configs/app.php` : routes, middlewares, environnement et base de données ;
+- `runtime/database/migrations` : migrations internes ;
+- `tests/` : tests automatisés.
+
+Le moteur du framework, son autoloading et les dépendances sont isolés dans
+`runtime/`, y compris la base SQLite et le cache. Le développeur n’a normalement
+jamais besoin de modifier ce dossier.
+
+En production, configurez Apache ou Nginx avec `public/` comme racine
+documentaire. La racine du projet, `.env`, `configs/`, `database/`, `tests/` et
+`runtime/` ne doivent jamais être accessibles par HTTP. Utilisez HTTPS et
+conservez `APP_DEBUG=false`.
+
+Exemple de route dynamique nommée
+---------------------------------
+
+Dans `configs/app.php` :
+
+    'GET /users/{id}' => [
+        'handler' => [UserController::class, 'show'],
+        'middleware' => [AuthMiddleware::class],
+        'name' => 'users.show',
+    ],
+
+Dans le contrôleur :
+
+    $id = $request->attribute('id');
+
+Validation
+----------
+
+    $validator->validate($request->input(), [
+        'email' => ['required', 'email'],
+    ]);
+
+Dans un formulaire, la vue peut produire le champ CSRF avec :
+
+    <?= $this->csrfField() ?>

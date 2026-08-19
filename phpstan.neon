@@ -1,0 +1,11 @@
+parameters:
+    level: 6
+    paths:
+        - src/controllers
+        - src/models
+        - src/services
+        - src/views
+        - configs
+        - public/index.php
+    bootstrapFiles:
+        - runtime/autoload.php

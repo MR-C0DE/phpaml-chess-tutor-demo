@@ -1,0 +1,12 @@
+.view-header { position:sticky; top:0; z-index:50; border-bottom:1px solid var(--line); background:var(--header-bg); backdrop-filter:blur(20px) saturate(150%); }
+.view-nav { min-height:4.75rem; display:flex; align-items:center; gap:1.5rem; }
+.view-brand { display:inline-flex; align-items:center; gap:.7rem; font-weight:900; letter-spacing:.055em; text-decoration:none; }
+.view-brand-logo { width:2.35rem; height:2.35rem; object-fit:contain; }
+.view-nav-links { min-width:0; margin-left:auto; display:flex; align-items:center; justify-content:flex-end; gap:1.15rem; }
+.view-nav-links a { color:var(--muted); font-size:.9rem; font-weight:750; text-decoration:none; }
+.view-nav-links .nav-github { padding:.6rem .85rem; border:1px solid var(--line); border-radius:.6rem; color:var(--ink); background:var(--soft-fill); }
+.theme-switcher { display:flex; gap:.2rem; padding:.2rem; border:1px solid var(--line); border-radius:.65rem; background:color-mix(in srgb,var(--panel) 72%,transparent); }
+.theme-switcher button { padding:.4rem .55rem; border:0; border-radius:.35rem; color:var(--muted); background:transparent; cursor:pointer; }
+.theme-switcher button[aria-pressed="true"] { color:var(--ink); background:var(--panel); }
+@media (max-width:48rem) { .view-nav { gap:.75rem; } .view-nav-links { gap:.65rem; } .view-nav-links > a:not(.nav-github) { display:none; } }
+@media (max-width:32rem) { .view-brand strong,.view-nav-links .nav-github { display:none; } .view-nav { min-height:4.25rem; } }

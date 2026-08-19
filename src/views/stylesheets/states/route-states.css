@@ -1,0 +1,2 @@
+.route-state { min-height:calc(100vh - 10rem); justify-content:center; }
+.loading-title { color:var(--lime); font-size:1.15rem; font-weight:850; }

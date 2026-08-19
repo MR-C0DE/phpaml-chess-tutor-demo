@@ -1,0 +1,27 @@
+{
+    "name": "phpaml-chess-tutor",
+    "version": "1.3.1",
+    "description": "PHP Application with MVC Architecture",
+    "runtime": {
+        "directory": "runtime",
+        "framework": "0.2.1-beta.1"
+    },
+    "scripts": {
+        "start": "aml serve",
+        "test": "aml test"
+    },
+    "requirements": {
+        "php": "^8.2"
+    },
+    "modules": {
+        "view": {
+            "package": "phpaml/view",
+            "constraint": "^0.1.0-beta.3",
+            "mode": "frontend"
+        },
+        "engine": {
+            "package": "phpaml/engine",
+            "mode": "client"
+        }
+    }
+}
