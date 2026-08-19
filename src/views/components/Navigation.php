@@ -16,13 +16,15 @@ final class Navigation extends Component
                 Link('TUTOR', '/')->class('brand'),
                 Element('div',
                     Link('Train', '#training'), Link('Lessons', '#lessons'),
+                )->class('primary-nav'),
+                Element('div',
                     Element('div',
                         Button('EN')->attribute('type', 'button')->attribute('data-locale', 'en')->attribute('aria-pressed', 'true'),
                         Button('FR')->attribute('type', 'button')->attribute('data-locale', 'fr')->attribute('aria-pressed', 'false'),
                     )->class('language-switcher')->attribute('aria-label', 'Language'),
                     ThemeSwitcher('light', 'dark', 'system')->class('theme-switcher'),
                     Button('Sign in')->attribute('type', 'button')->attribute('data-action', 'signin')->attribute('id', 'account-button')->class('nav-button'),
-                )->class('nav-links'),
+                )->class('nav-controls'),
             )->class('site-nav', 'shell'),
         )->class('site-header');
     }
