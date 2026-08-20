@@ -1,3 +1,9 @@
-*
-!Dockerfile
-!output/phpaml-build.zip
+.git
+.github
+.env
+.DS_Store
+output
+runtime
+tests
+tmp
+deliverables
