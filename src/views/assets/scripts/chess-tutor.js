@@ -3,6 +3,7 @@ import { Chess } from '/_aml/chess-core.js';
 const glyphs = { wk:'♔',wq:'♕',wr:'♖',wb:'♗',wn:'♘',wp:'♙',bk:'♚',bq:'♛',br:'♜',bb:'♝',bn:'♞',bp:'♟' };
 let game = new Chess(), selected = null, legalTargets = [], lastMove = null;
 let lessonId = null, busy = false, authMode = 'login', user = null, dragSource = null;
+let stockfishWorker = null, stockfishReady = null, stockfishSearch = Promise.resolve();
 const $ = selector => document.querySelector(selector);
 const csrf = () => $('meta[name="csrf-token"]')?.content || '';
 const uci = move => `${move.from}${move.to}${move.promotion || ''}`;
@@ -27,6 +28,64 @@ const french = {
   'Light':'Clair','Dark':'Sombre','System':'Système','Your first lesson will appear here.':'Votre première leçon apparaîtra ici.'
 };
 const tr = text => locale === 'fr' ? (french[text] || text) : text;
+
+function stockfish() {
+  if (stockfishReady) return stockfishReady;
+  stockfishReady = new Promise((resolve, reject) => {
+    const worker = new Worker('/_aml/stockfish.js#/_aml/stockfish.wasm,worker');
+    stockfishWorker = worker;
+    const timeout = setTimeout(() => reject(new Error(tr('The chess engine could not start.'))), 20000);
+    const readyListener = event => {
+      if (String(event.data).trim() !== 'uciok') return;
+      worker.removeEventListener('message', readyListener);
+      worker.postMessage('setoption name Skill Level value 20');
+      worker.postMessage('setoption name Hash value 64');
+      worker.postMessage('isready');
+      const isReady = readyEvent => {
+        if (String(readyEvent.data).trim() !== 'readyok') return;
+        worker.removeEventListener('message', isReady);
+        clearTimeout(timeout);
+        resolve(worker);
+      };
+      worker.addEventListener('message', isReady);
+    };
+    worker.addEventListener('message', readyListener);
+    worker.addEventListener('error', () => reject(new Error(tr('The chess engine is unavailable.'))), {once:true});
+    worker.postMessage('uci');
+  });
+  return stockfishReady;
+}
+
+function calculateStrongestReply(fen) {
+  const search = async () => {
+    const worker = await stockfish();
+    return new Promise((resolve, reject) => {
+      let depth = 0, score = null, pv = [];
+      const timeout = setTimeout(() => { worker.postMessage('stop'); reject(new Error(tr('The chess engine took too long.'))); }, 15000);
+      const listener = event => {
+        const line = String(event.data).trim();
+        if (line.startsWith('info ')) {
+          const depthMatch = line.match(/\bdepth (\d+)/), scoreMatch = line.match(/\bscore (cp|mate) (-?\d+)/), pvMatch = line.match(/\bpv (.+)$/);
+          if (depthMatch) depth = Number(depthMatch[1]);
+          if (scoreMatch) score = {type:scoreMatch[1], value:Number(scoreMatch[2])};
+          if (pvMatch) pv = pvMatch[1].split(/\s+/).slice(0, 12);
+          return;
+        }
+        const match = line.match(/^bestmove\s+([a-h][1-8][a-h][1-8][qrbn]?)/);
+        if (!match) return;
+        clearTimeout(timeout); worker.removeEventListener('message', listener);
+        resolve({move:match[1], depth, score, pv});
+      };
+      worker.addEventListener('message', listener);
+      worker.postMessage('ucinewgame');
+      worker.postMessage(`position fen ${fen}`);
+      worker.postMessage('go movetime 1800 depth 22');
+    });
+  };
+  const result = stockfishSearch.then(search, search);
+  stockfishSearch = result.catch(() => undefined);
+  return result;
+}
 function translateStatic(){
   document.documentElement.lang=locale;
   const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;
@@ -60,11 +119,11 @@ function dragOver(event,square){if(!legalTargets.some(move=>move.to===square))re
 function dropPiece(event,destination){event.preventDefault();event.currentTarget.classList.remove('drag-over');if(dragSource&&legalTargets.some(move=>move.to===destination))playStudentMove(dragSource,destination);endDrag();}
 function endDrag(){document.querySelectorAll('.is-dragging,.drag-over').forEach(node=>node.classList.remove('is-dragging','drag-over'));$('#chess-board')?.classList.remove('is-dragging-piece');dragSource=null;}
 
-async function playStudentMove(from,to){const candidate=legalTargets.find(move=>move.to===to),promotion=candidate?.flags?.includes('p')?'q':undefined;let move;try{move=game.move({from,to,promotion});}catch{return;}lastMove=[from,to];selected=null;legalTargets=[];render();await reviewMove(uci(move),move.san);}
+async function playStudentMove(from,to){const candidate=legalTargets.find(move=>move.to===to),promotion=candidate?.flags?.includes('p')?'q':undefined,previousPosition=game.fen(),candidateMoves=game.moves({verbose:true}).map(uci);let move;try{move=game.move({from,to,promotion});}catch{return;}lastMove=[from,to];selected=null;legalTargets=[];render();await reviewMove(uci(move),move.san,previousPosition,candidateMoves);}
 async function animateTutorMove(code){const from=code.slice(0,2),to=code.slice(2,4),source=document.querySelector(`[data-square="${from}"] .chess-piece`),destination=document.querySelector(`[data-square="${to}"]`);if(source&&destination){const a=source.getBoundingClientRect(),b=destination.getBoundingClientRect(),ghost=source.cloneNode(true),sourceStyle=getComputedStyle(source);ghost.classList.add('moving-piece');Object.assign(ghost.style,{left:`${a.left}px`,top:`${a.top}px`,width:`${a.width}px`,height:`${a.height}px`,fontSize:sourceStyle.fontSize});document.body.append(ghost);source.style.opacity='0';requestAnimationFrame(()=>ghost.style.transform=`translate(${b.left-a.left}px, ${b.top-a.top}px)`);await new Promise(resolve=>setTimeout(resolve,330));ghost.remove();}game.move({from,to,promotion:code[4]||undefined});lastMove=[from,to];render();}
-async function api(path,options={}){const headers={Accept:'application/json',...(options.body?{'Content-Type':'application/json','X-CSRF-Token':csrf()}:{}),...(options.headers||{})};const response=await fetch(path,{...options,headers});const data=await response.json().catch(()=>({error:'Unexpected server response.'}));if(!response.ok)throw new Error(data.error||'Request failed.');return data;}
+async function api(path,options={}){const headers={Accept:'application/json',...(options.body?{'Content-Type':'application/json','X-CSRF-Token':csrf()}:{}),...(options.headers||{})};const response=await fetch(path,{credentials:'include',...options,headers});const data=await response.json().catch(()=>({error:'Unexpected server response.'}));if(!response.ok)throw new Error(data.error||'Request failed.');return data;}
 
-async function reviewMove(moveCode,san){if(!user){openAuth();resetBoard();return;}busy=true;render();setTutor(locale==='fr'?'Réflexion…':'Thinking…',locale==='fr'?`Tutor étudie ${san}.`:`Tutor is studying ${san}.`,locale==='fr'?'Cherchez les échecs, les prises et les menaces pendant l’analyse.':'Look for checks, captures and threats while you wait.');try{if(!lessonId){const started=await api('/api/lessons',{method:'POST',body:JSON.stringify({position:game.fen(),locale})});lessonId=started.lesson.id;}const replies=game.moves({verbose:true}).map(uci);if(!replies.length){finishGame();return;}const data=await api('/api/tutor/move',{method:'POST',body:JSON.stringify({lessonId,move:moveCode,position:game.fen(),legalReplies:replies,locale})});await animateTutorMove(data.review.reply);$('#lesson-score').textContent=data.lesson.score;$('#move-count').textContent=data.lesson.moves.length;const qualities=locale==='fr'?{excellent:'Excellent',good:'Bon coup',inaccuracy:'Imprécision',mistake:'Erreur'}:{excellent:'Excellent',good:'Good move',inaccuracy:'Inaccuracy',mistake:'Mistake'};setTutor(qualities[data.review.quality]||(locale==='fr'?'Analysé':'Reviewed'),data.review.explanation,data.review.tip);loadLessons();if(game.isGameOver())finishGame();}catch(error){setTutor(locale==='fr'?'Indisponible':'Unavailable',error.message,locale==='fr'?'La position a été restaurée pour préserver la cohérence de la leçon.':'The position was restored so the saved lesson remains consistent.');game.undo();lastMove=null;render();}finally{busy=false;render();}}
+async function reviewMove(moveCode,san,previousPosition,candidateMoves){if(!user){openAuth();resetBoard();return;}busy=true;render();setTutor(locale==='fr'?'Calcul de grand maître…':'Grandmaster calculation…',locale==='fr'?`Stockfish cherche la réponse la plus forte à ${san}, puis DeepSeek prépare la leçon.`:`Stockfish is finding the strongest reply to ${san}, then DeepSeek prepares the lesson.`,locale==='fr'?'Calcul tactique profond, puis explication pédagogique.':'Deep tactical calculation followed by a teaching explanation.');try{if(!lessonId){const started=await api('/api/lessons',{method:'POST',body:JSON.stringify({position:previousPosition,locale})});lessonId=started.lesson.id;}const replies=game.moves({verbose:true}).map(uci);if(!replies.length){finishGame();return;}const engine=await calculateStrongestReply(game.fen());if(!replies.includes(engine.move))throw new Error(locale==='fr'?'Le moteur a retourné un coup invalide.':'The engine returned an invalid move.');const data=await api('/api/tutor/move',{method:'POST',body:JSON.stringify({lessonId,move:moveCode,previousPosition,position:game.fen(),candidateMoves,legalReplies:replies,engineReply:engine.move,engineDepth:engine.depth,engineScore:engine.score,enginePv:engine.pv,locale})});await animateTutorMove(data.review.reply);$('#lesson-score').textContent=data.lesson.score;$('#move-count').textContent=data.lesson.moves.length;const qualities=locale==='fr'?{excellent:'Excellent',good:'Bon coup',inaccuracy:'Imprécision',mistake:'Erreur'}:{excellent:'Excellent',good:'Good move',inaccuracy:'Inaccuracy',mistake:'Mistake'};const ownMoveLabel=locale==='fr'?`Pourquoi Tutor joue ${data.review.reply}`:`Why Tutor plays ${data.review.reply}`;const memoryLabel=locale==='fr'?'Mémoire':'Memory';const memoryLine=data.review.memoryNote?`\n\n${memoryLabel}: ${data.review.memoryNote}`:'';const completeExplanation=`${data.review.explanation}\n\n${ownMoveLabel}: ${data.review.replyExplanation}${memoryLine}\n\n♞ ${data.review.banter}`;setTutor(qualities[data.review.quality]||(locale==='fr'?'Analysé':'Reviewed'),completeExplanation,data.review.tip);loadLessons();if(game.isGameOver())finishGame();}catch(error){setTutor(locale==='fr'?'Indisponible':'Unavailable',error.message,locale==='fr'?'La position a été restaurée pour préserver la cohérence de la leçon.':'The position was restored so the saved lesson remains consistent.');game.undo();lastMove=null;render();}finally{busy=false;render();}}
 function finishGame(){const message=game.isCheckmate()?'Checkmate. The lesson is complete.':game.isDraw()?'Draw. The lesson is complete.':'The game is complete.';setTutor('Game over',message,'Review the saved lesson before starting another game.');}
 function updateBoardStatus(){const status=$('#board-status');if(!status)return;if(locale==='fr'){if(busy)status.textContent='Tutor réfléchit…';else if(game.isCheckmate())status.textContent=`Échec et mat · ${game.turn()==='w'?'Les Noirs':'Les Blancs'} gagnent`;else if(game.isDraw())status.textContent='Partie nulle';else if(game.inCheck())status.textContent=`${game.turn()==='w'?'Les Blancs':'Les Noirs'} sont en échec`;else status.textContent=game.turn()==='w'?'À vous · glissez ou sélectionnez une pièce':'Au tour de Tutor';return;}if(busy)status.textContent='Tutor is thinking…';else if(game.isCheckmate())status.textContent=`Checkmate · ${game.turn()==='w'?'Black':'White'} wins`;else if(game.isDraw())status.textContent='Draw';else if(game.inCheck())status.textContent=`${game.turn()==='w'?'White':'Black'} is in check`;else status.textContent=game.turn()==='w'?'Your turn · drag or select a piece':'Tutor’s turn';}
 function setTutor(state,message,tip){$('#tutor-state').textContent=state;$('#tutor-message').textContent=message;$('#tutor-tip').textContent=tip;}
