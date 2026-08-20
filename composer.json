@@ -1,7 +1,7 @@
 {
     "name": "phpaml/phpaml",
-    "description": "Micro-framework MVC inspiré d'ASP.NET et Java EE",
-    "license": "proprietary",
+    "description": "Bilingual AI chess mentor built with PHPAML View, MongoDB and DeepSeek",
+    "license": "MIT",
     "type": "project",
     "require": {
         "php": ">=8.2",

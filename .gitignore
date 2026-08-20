@@ -1,4 +1,5 @@
 .env
 /vendor/
 /runtime/
+/output/
 .DS_Store

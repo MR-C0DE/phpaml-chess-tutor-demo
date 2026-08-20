@@ -13,7 +13,10 @@ final class Navigation extends Component
     {
         return Element('header',
             Element('nav',
-                Link('TUTOR', '/')->class('brand'),
+                Element('a',
+                    Element('span', Text('♞'))->attribute('aria-hidden', 'true')->class('brand-logo', 'knight-logo'),
+                    Text('TUTOR'),
+                )->attribute('href', '/')->class('brand'),
                 Element('div',
                     Link('Train', '#training'), Link('Lessons', '#lessons'),
                 )->class('primary-nav'),

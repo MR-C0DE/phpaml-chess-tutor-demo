@@ -5,6 +5,12 @@ declare(strict_types=1);
 $root = dirname(__DIR__);
 $requestPath = (string) (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/');
 
+// Isolate Tutor from other PHPAML applications running on different localhost ports.
+// Browser cookies are scoped by host, not by port.
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('TUTORSESSID');
+}
+
 if (PHP_SAPI === 'cli-server' && $requestPath !== '/' && is_file(__DIR__ . $requestPath)) {
     return false;
 }
@@ -20,6 +26,20 @@ if ($requestPath === '/_aml/chess-core.js') {
     header('Content-Type: application/javascript; charset=UTF-8');
     header('Cache-Control: public, max-age=31536000, immutable');
     readfile($root . '/src/views/assets/vendor/chess.js');
+    return;
+}
+
+if ($requestPath === '/_aml/stockfish.js') {
+    header('Content-Type: application/javascript; charset=UTF-8');
+    header('Cache-Control: public, max-age=31536000, immutable');
+    readfile($root . '/src/views/assets/vendor/stockfish/stockfish-18-lite-single.js');
+    return;
+}
+
+if ($requestPath === '/_aml/stockfish.wasm') {
+    header('Content-Type: application/wasm');
+    header('Cache-Control: public, max-age=31536000, immutable');
+    readfile($root . '/src/views/assets/vendor/stockfish/stockfish-18-lite-single.wasm');
     return;
 }
 
