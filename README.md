@@ -82,3 +82,7 @@ This is a demonstration application, not a claim of an unbeatable chess system. 
 The bundled Stockfish.js assets are licensed under GPLv3. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the bundled license for details.
 
 The original application code is available under the [MIT License](LICENSE).
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md), the [Code of Conduct](CODE_OF_CONDUCT.md), and the [security policy](SECURITY.md) before participating. Third-party license notices must be preserved.
