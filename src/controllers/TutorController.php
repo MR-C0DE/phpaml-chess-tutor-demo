@@ -21,7 +21,10 @@ final class TutorController extends Controller
         try {
             $items = ChessContext::connect()->lessons()->where('userId', '=', $userId)->orderBy('updatedAt', 'desc')->limit(20)->all();
             return $this->json(['lessons' => array_map(static fn (Lesson $item): array => self::summary($item), $items)]);
-        } catch (Throwable) { return $this->json(['error' => 'Lessons are temporarily unavailable.'], 503); }
+        } catch (Throwable $error) {
+            error_log('Chess Tutor lesson list failed: ' . $error::class . ': ' . $error->getMessage());
+            return $this->json(['error' => 'Lessons are temporarily unavailable.'], 503);
+        }
     }
 
     public function start(Request $request): Response
